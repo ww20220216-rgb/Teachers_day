@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>教师节快乐 🎉</title>
+  <style>
+    /* 黑板背景 */
+    body {
+      margin:0;
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: url('https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+      color: #fff;
+      text-align: center;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+    }
+    .overlay {
+      background: rgba(0,0,0,0.5);
+      position: absolute;
+      top:0;left:0;right:0;bottom:0;
+      z-index:-1;
+    }
+    h1 {
+      font-size:2.5em;
+      margin:0.2em 0;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    }
+    p {
+      font-size:1.2em;
+      max-width:600px;
+      margin:0 auto 1em;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+    }
+    .photo {
+      max-width:300px;
+      border:5px solid #fff;
+      border-radius:10px;
+      box-shadow:0 4px 15px rgba(0,0,0,0.4);
+      margin:10px;
+    }
+    footer {
+      margin-top:30px;
+      font-size:14px;
+      color:#ccc;
+    }
+    canvas.confetti {
+      position: fixed;
+      top:0;left:0;width:100%;height:100%;
+      pointer-events:none;
+      z-index:9999;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <h1>教师节快乐！🎉</h1>
+  <p>亲爱的小猪猪：<br>这是你的第二个教师节，在这特别的日子里，愿你桃李满天下，身体健康，永远开心！</p>
+
+  <!-- 你的照片，可以多张 -->
+  <div>
+    <img src="小猪猪 (1).jpg" alt="祝福照片1" class="photo">
+    <img src="小猪猪 (2).jpg" alt="祝福照片2" class="photo">
+    <img src="小猪猪 (3).jpg" alt="祝福照片3" class="photo">
+    <img src="小猪猪 (4).jpg" alt="祝福照片4" class="photo">
+    <img src="小猪猪 (5).jpg" alt="祝福照片5" class="photo">
+  </div>
+
+  <footer>© <span id="year"></span> 我的教师节祝贺</footer>
+
+  <canvas class="confetti" id="confetti"></canvas>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // 彩纸礼花效果 (简单版)
+    const confettiCanvas = document.getElementById('confetti');
+    const ctx = confettiCanvas.getContext('2d');
+    let W = window.innerWidth;
+    let H = window.innerHeight;
+    confettiCanvas.width = W;
+    confettiCanvas.height = H;
+
+    window.addEventListener('resize', () => {
+      W = window.innerWidth;
+      H = window.innerHeight;
+      confettiCanvas.width = W;
+      confettiCanvas.height = H;
+    });
+
+    const confettiCount = 200;
+    const confetti = [];
+
+    for (let i=0;i<confettiCount;i++) {
+      confetti.push({
+        x: Math.random()*W,
+        y: Math.random()*H - H,
+        r: Math.random()*6+2,
+        d: Math.random()*confettiCount,
+        color: `hsl(${Math.random()*360},100%,50%)`,
+        tilt: Math.random()*10 -10
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0,0,W,H);
+      for (let i=0;i<confettiCount;i++) {
+        let c = confetti[i];
+        ctx.beginPath();
+        ctx.fillStyle = c.color;
+        ctx.ellipse(c.x,c.y,c.r,c.r/2,Math.PI/4,0,2*Math.PI);
+        ctx.fill();
+      }
+      update();
+      requestAnimationFrame(draw);
+    }
+
+    let angle = 0;
+    function update() {
+      angle += 0.01;
+      for (let i=0;i<confettiCount;i++) {
+        let c = confetti[i];
+        c.y += Math.cos(angle+c.d)+1 + c.r/2;
+        c.x += Math.sin(angle)*2;
+        if(c.y > H){
+          c.x = Math.random()*W;
+          c.y = -10;
+        }
+      }
+    }
+
+    draw();
+  </script>
+</body>
+</html>
